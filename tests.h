@@ -11,18 +11,15 @@
 #include <iostream>
 #include <cassert>
 
-using namespace std;
-
-
 void testGraph() {
     Graph<int>* gr = new Graph<int>(7, true);
-    gr->changeEdge(0, 1, 15);
-    gr->changeEdge(0, 2, 2);
-    gr->changeEdge(0, 6, 1);
-    gr->changeEdge(2, 3, 3);
-    gr->changeEdge(2, 4, 4);
-    gr->changeEdge(3, 1, 1);
-    gr->changeEdge(4, 1, 2);
+    gr->changeEdge(0, 1, 13);
+    gr->changeEdge(0, 2, 3);
+    gr->changeEdge(0, 6, 2);
+    gr->changeEdge(2, 3, 4);
+    gr->changeEdge(2, 4, 3);
+    gr->changeEdge(3, 1, 5);
+    gr->changeEdge(4, 1, 7);
     gr->changeEdge(5, 4, 10);
     gr->changeEdge(6, 0, 1);
 
@@ -34,15 +31,14 @@ void testGraph() {
     assert(gr->existOfEdge(1, 0) == false);
 
     assert(gr->getWeightOfEdge(6, 0) != 10);
-    assert(gr->getWeightOfEdge(0, 1) == 15);
-    assert(gr->getWeightOfEdge(5, 4) == 10);
+    assert(gr->getWeightOfEdge(0, 1) == 13);
 
     gr->changeEdge(5, 4, 8);
     assert(gr->getWeightOfEdge(5, 4) == 8);
 
-    assert(gr->Dijkstra(0, 1).first == 6);
-    assert(gr->Dijkstra(2, 4).first == 4);
-    assert(gr->Dijkstra(4, 5).first == INT_MAX);
+    assert(gr->Dijkstra(0, 1).first == 12);
+    assert(gr->Dijkstra(2, 4).first == 3);
+    assert(gr->Dijkstra(3, 6).first == INT_MAX);
 
 }
 void testDynamicArray() {
@@ -131,8 +127,7 @@ void testArraySequence() {
     int initArr1[] = { 1,2,3,5 };
     int initArr2[] = { -1,0,1,2,3,4,5,6,7 };
     int initArr3[] = { -1 };
-    int initArr35[] = { -2,0,1,2,3,4,5,0,8 };
-    int initArr4[] = { 0,1,2,3,5,6 };
+    int initArr4[] = { -2,0,1,2,3,4,5,0,8 };
     int initArr5[] = { -2,0,1,2,3,4,5,0,8,-1 };
     int initArr6[] = { -2,0,1,2,3,4,5,0,8,1,2,3,5 };
 
@@ -152,10 +147,7 @@ void testArraySequence() {
     seq1.Insert(-1, 0);
     seq1.Insert(7, 7);
     seq1.Insert(4, 5);
-    /*for (int i = 0; i < seq1.GetSize(); i++) {
-        cout << << i << ":"<< seq1.Get(i) << endl;
-    }
-    cout << "D" << seq1.GetSize()<<endl;*/
+
     assert(seq1 == ArraySequence<int>(initArr2, 9));
 
     ArraySequence<int>* seq2 = seq1.GetSubsequence(0, 0);
@@ -168,7 +160,7 @@ void testArraySequence() {
     seq1.Set(-2, 0);
     seq1.Set(8, 8);
     seq1.Set(0, 7);
-    assert(seq1 == ArraySequence<int>(initArr35, 9));
+    assert(seq1 == ArraySequence<int>(initArr4, 9));
     ArraySequence<int>* seq5 = seq1.Concat(ArraySequence<int>());
     ArraySequence<int>* seq6 = seq1.Concat(ArraySequence<int>(initArr3, 1));
     ArraySequence<int>* seq7 = seq1.Concat(ArraySequence<int>(initArr1, 4));
@@ -188,8 +180,7 @@ void testListSequence() {
     int initArr1[] = { 1,2,3,5 };
     int initArr2[] = { -1,0,1,2,3,4,5,6,7 };
     int initArr3[] = { -1 };
-    int initArr35[] = { -2,0,1,2,3,4,5,0,8 };
-    int initArr4[] = { 0,1,2,3,5,6 };
+    int initArr4[] = { -2,0,1,2,3,4,5,0,8 };
     int initArr5[] = { -2,0,1,2,3,4,5,0,8,-1 };
     int initArr6[] = { -2,0,1,2,3,4,5,0,8,1,2,3,5 };
 
@@ -221,7 +212,7 @@ void testListSequence() {
     seq1.Set(-2, 0);
     seq1.Set(8, 8);
     seq1.Set(0, 7);
-    assert(seq1 == ListSequence<int>(initArr35, 9));
+    assert(seq1 == ListSequence<int>(initArr4, 9));
 
     ListSequence<int>* seq5 = seq1.Concat(ListSequence<int>());
     ListSequence<int>* seq6 = seq1.Concat(ListSequence<int>(initArr3, 1));
@@ -236,12 +227,9 @@ void testListSequence() {
     delete seq5;
     delete seq6;
     delete seq7;
-
 }
 
-
 void alltests() {
-    Sequence<int>* seq = new ArraySequence<int>(0);
     testDynamicArray();
     cerr << "class DynamicArray is successfully tested" << endl;
     testLinkedList();

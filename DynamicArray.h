@@ -15,7 +15,6 @@ private:
     int size = 0;
 public:
     DynamicArray() : size(0) {}
-
     DynamicArray(int size) : size(size) {
         if (size < 0) throw std::length_error(NEGATIVE_SIZE_MESSAGE);
 
