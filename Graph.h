@@ -7,6 +7,9 @@
 #include "DynamicArray.h"
 #include <string>
 #include "LinkedList.h"
+#include "Dictionary.h"
+#include "Matrix.h"
+#include "Sorts.h"
 
 #define INDEX_OUT_OF_RANGE_MESSAGE "index out of range"
 
@@ -17,19 +20,23 @@ private:
     class Edge {
     private:
         T weight;
-        int vertex;
+        int vertex1;
+        int vertex2;
     public:
         Edge() {
             this->weight = 0;
-            this->vertex = -1;
+            this->vertex1 = -1;
+            this->vertex2 = -1;
         }
         Edge(const Edge& edge){
             this->weight = edge.weight;
-            this->vertex = edge.vertex;
+            this->vertex1 = edge.vertex1;
+            this->vertex2 = edge.vertex2;
         }
-        Edge(int ver, T weight) {
+        Edge(int ver1, int ver2, T weight) {
             this->weight = weight;
-            this->vertex = ver;
+            this->vertex1 = ver1;
+            this->vertex2 = ver2;
         }
         void changeWeight(T weight_) {
             this->weight = weight_;
@@ -37,14 +44,26 @@ private:
         T getWeight() {
             return this->weight;
         }
-        int getVertex() {
-            return this->vertex;
+        int getVertex1() {
+            return this->vertex1;
+        }
+        int getVertex2(){
+            return this->vertex2;
         }
         bool operator==(Edge& other) {
-            return (this->weight == other.weight) && (this->vertex == other.vertex);
+            return (this->weight == other.weight) && (this->vertex1 == other.vertex1) && (this->vertex2 == other.vertex2);
         }
         bool operator!=(Edge& other) {
-            return (this->weight != other.weight) || (this->vertex != other.vertex);
+            return (this->weight != other.weight) || (this->vertex1 != other.vertex1) || (this->vertex2 != other.vertex2);
+        }
+        Edge& operator=(const Edge &edge)
+        {
+            // Выполняем копирование значений
+            this->weight = edge.weight;
+            this->vertex1 = edge.vertex1;
+            this->vertex2 = edge.vertex2;
+            // Возвращаем текущий объект, чтобы иметь возможность связать в цепочку выполнение нескольких операций присваивания
+            return *this;
         }
 
         ~Edge() = default;
@@ -58,47 +77,51 @@ private:
             LinkedList<Edge*>* edges = new LinkedList<Edge*>();
         }
 
+       /* Vertex(const Vertex& v) {
+            this->edges = new LinkedList<Edge *>(v->edges);
+        }*/
+
         Vertex(LinkedList<Edge*>& edges) {
             this->edges = new LinkedList<Edge*>(edges);
         }
 
-        int getEdgesCount() {
+        int getEdgesCount(){
             return this->edges->GetSize();
         }
 
-        void addEdge(int ver, T weight) {
-            Edge* ed = new Edge(ver, weight);
+        void addEdge(int ver1, T weight) {
+            Edge* ed = new Edge(ver1, -1, weight);
             this->edges->Append(ed);
         }
 
-        Edge* getEdge(int ver) {
+        Edge* getEdge(int ver1, int ver2) {
             for (int i = 0; i < this->getEdgesCount(); i++) {
-                if (this->edges->Get(i)->getVertex() == ver) {
+                if (this->edges->Get(i)->getVertex1() == ver1 && this->edges->Get(i)->getVertex2() == ver2) {
                     return this->edges->Get(i);
                 }
             }
-            Edge* ed = new Edge(ver, 0);
+            Edge* ed = new Edge(ver1, ver2, 0);
             return ed;
         }
 
-        T getWeight(int ver2) {
+        T getWeight(int ver1) {
             for (int i = 0; i < this->getEdgesCount(); i++) {
-                if (ver2 == this->edges->Get(i)->getVertex()) {
+                if (ver1 == this->edges->Get(i)->getVertex1()) {
                     return this->edges->Get(i)->getWeight();
                 }
             }
             return 0;
         }
-        void changeWeight(int ver, T weight = 0) {
+        void changeWeight(int ver1, T weight) {
             for (int i = 0; i < this->getEdgesCount(); i++) {
-                if (ver == this->edges->Get(i)->getVertex()) {
+                if (ver1 == this->edges->Get(i)->getVertex1()) {
                     this->edges->Get(i)->changeWeight(weight);
                 }
             }
         }
-        bool findEdge(int ver2) {
+        bool findEdge(int ver1, int ver2) {
             for (int i = 0; i < this->getEdgesCount(); i++) {
-                if (ver2 == this->getEdge(i)->getVertex())
+                if (ver1 == this->getEdge(i)->getVertex1() && ver2 == this->getEdge(i)->getVertex2())
                     return true;
             }
             return false;
@@ -108,6 +131,13 @@ private:
         }
         bool operator!=(Vertex& other) {
             return (this->edges != other.edges);
+        }
+        Vertex& operator=(const Vertex &v)
+        {
+            // Выполняем копирование значений
+            this->edges = v.edges;
+            // Возвращаем текущий объект, чтобы иметь возможность связать в цепочку выполнение нескольких операций присваивания
+            return *this;
         }
     };
 
@@ -122,9 +152,17 @@ private:
     LinkedList<Vertex*>* vertices = new LinkedList<Vertex*>();
     bool directed = true;
     int size = 0;
-
 public:
 
+    Graph& operator=(const Graph<T> &graph)
+    {
+        // Выполняем копирование значений
+        this->vertices = new LinkedList<Vertex*>(graph.vertices);
+        this->directed = graph.directed;
+        this->size = graph.size;
+        // Возвращаем текущий объект, чтобы иметь возможность связать в цепочку выполнение нескольких операций присваивания
+        return *this;
+    }
     Graph(int size, bool direct) {
         Vertex* ver;
         vertices = new LinkedList<Vertex*>();
@@ -135,32 +173,36 @@ public:
         this->directed = direct;
         this->size = size;
     }
+    Graph(Graph& graph){
+        this->vertices = graph.vertices;
+        this->size = graph.size;
+        this->directed = graph.directed;
+    }
 
     int getSize() {
         return this->vertices->GetSize();
     }
-
     bool isDirected() {
         return this->directed;
     }
-
     void addVertex() {
         Vertex* ver = new Vertex();
         this->vertices->Append(ver);
         this->size++;
     }
-
     Vertex* getVertex(int i) {
         if (i >= this->getSize())
             throw std::out_of_range(INDEX_OUT_OF_RANGE_MESSAGE);
         return this->vertices->Get(i);
     }
-
-    bool existOfVertex (int i){
-        if (i >= this->getSize())
-            return false;
-        else
-            return true;
+    bool existOfVertex (Vertex* vertex){
+        bool t = false;
+        for(int i = 0; i < this->getSize(); i++){
+            if(vertex == this->getVertex(i)){
+                t = true;
+            }
+        }
+        return t;
     }
     bool existOfEdge (int ver1, int ver2) {
         for (int i = 0; i < this->getSize(); i++) {
@@ -169,11 +211,27 @@ public:
         }
         return false;
     }
-
+    T getDegreeOfVertex(int ver1){ //число ребер графа, которым принадлежит эта вершина
+        int counter = 0;
+        for(int i = 0; i < this->getSize(); i++){
+            if(this->existOfEdge(ver1, i)/*this->getEdge(ver1,i) != 0*/)
+                counter++;
+        }
+        return counter;
+    }
     T getWeightOfEdge(int ver1, int ver2) {
         return this->getVertex(ver1)->getWeight(ver2);
     }
 
+    void SetVertex(const Vertex& value, int index) {
+        if (index < 0 || index > this->size) throw std::out_of_range(INDEX_OUT_OF_RANGE_MESSAGE);
+        *this->vertices->Get(index) = value;
+    }
+    void SwapVertex(Vertex& i, Vertex& j){
+        Vertex tmp = i;
+        i = j;
+        j = tmp;
+    }
     void changeEdge(int ver1, int ver2, T weight) {
         if ((ver1 < 0) || (ver1 >= this->size))
             throw std::out_of_range(INDEX_OUT_OF_RANGE_MESSAGE);
@@ -266,18 +324,80 @@ public:
                 this->TopologicalSortHelper(i, visited, seq);
         return seq;
     }
+    Matrix<int>* AdjacencyMatrix(){
+        auto* matrix = new Matrix<int>();
+        for (int i = 0; i < this->getSize(); i++) {
+            for (int j = 0; j < this->getSize(); j++) {
+                matrix->Set(this->getWeightOfEdge(i, j), i, j);
+            }
+        }
+        return matrix;
+    }
+
+    void PrintAdjacencyMatrix(Graph<T>* graph) {
+        for (int i = 0; i < graph->getSize(); i++) {
+            for (int j = 0; j < graph->getSize(); j++) {
+                cout << graph->getWeightOfEdge(i, j) << "   ";
+            }
+            cout << endl;
+        }
+    }
+    Graph<T>* BubbleSort() { //O(n^2)
+        Graph<T>* graph = this;
+        for (int i = 0; i < graph->getSize(); i++) {
+            for (int j = 0; j < graph->getSize() - i - 1; j++) {
+                if (graph->getDegreeOfVertex(i-1) > graph->getDegreeOfVertex(i)) {
+                    graph->SwapVertex(*graph->getVertex(i-1), *graph->getVertex(i));
+                }
+            }
+        }
+        return graph;
+    }
+
     template<class TKey, class TElement>
-    ArraySequence<int>* UndirGraphColoring(){
+    Dictionary<TKey, TElement>* UndirGraphColoring(){
         int k = 1;
+        auto* graphColored = new Graph<T>(*this);
+        //упорядочиваем вершины по убыванию степени
+        for (int i = 0; i < graphColored->getSize(); i++) {
+            for (int j = 0; j < graphColored->getSize() - i - 1; j++) {
+                if (graphColored->getDegreeOfVertex(j) < graphColored->getDegreeOfVertex(j+1)) {
+                    graphColored->SwapVertex(*graphColored->getVertex(j), *graphColored->getVertex(j+1));
+                }
+            }
+        }
+
+        //Matrix<T> adjMatrix = this->AdjacencyMatrix();
+        //Graph<T>* graphColored = this->BubbleSort();
+        //graphColored->BubbleSort();
+        //LinkedList<Vertex*>* orderedVertices = vertices;
+        /*for(int i = 1; i < this->getSize(); i++){
+            if(graphColored->getDegreeOfVertex(i-1) > graphColored->getDegreeOfVertex(i)){
+                graphColored->SwapVertex(*graphColored->getVertex(i-1), *graphColored->getVertex(i));
+                //graphColored->swapVertex(*graphColored->getVertex(i-1), *graphColored->getVertex(i));
+                Vertex* temp = graphColored->getVertex(i-1);
+                *graphColored->getVertex(i-1) = *graphColored->getVertex(i);
+                graphColored->getVertex(i) = temp;
+                cout<<"----"<<endl;
+                PrintAdjacencyMatrix(graphColored);
+                cout<<endl;
+                Vertex* temp = orderedVertices->Get(i-1);
+                *orderedVertices->Get(i-1) = *orderedVertices->Get(i);
+                *orderedVertices->Get(i) = *temp;
+                //orderedVertices->Swapper(orderedVertices->Get(i-1), orderedVertices->Get(i));
+            }
+        }*/
+        return graphColored;
+/*
         //Sequence<int>* V = new ArraySequence<int>(); //множество вершин
-        D
-        Sequence<int>* S = new ArraySequence<int>(); //множество вершин окрашенных в цвет к
+        auto* ColoredInK = new Dictionary<int, int>();//множество вершин окрашенных в цвет к
         for (int i = 0; i < this->getSize(); i++){
             if (existOfVertex(i))
                 continue;
+            ColoredInK->changeElem(k,i); //красим в цвет k вершину i
             S->Append(i);//добавляем цвет
             this->getVertex(i) = this->getVertex(i) // исключаем итую вершину
-
+*/
     }
 
 

@@ -256,6 +256,8 @@ public:
 
     }
 
+
+
     bool operator==(const LinkedList<T>& list) const {
         if (this->size != list.size) return false;
 

@@ -3,7 +3,14 @@
 #include "GraphPrinter.h"
 
 using namespace std;
-
+template <typename T>
+void PrintSequence(LinkedList<T*>* seq) {
+    for (int i=0; i<seq->GetSize(); i++) {
+        cout << seq->Get(i);
+        cout << " ";
+    }
+    cout<<endl;
+}
 Graph<int>* DirectedGraph()
 {
     Graph<int>* gr = new Graph<int>(7, true);
@@ -64,7 +71,7 @@ void GraphConstructor(Graph<T>* graph) {
                 break;
             case 2:
                 cout << endl;
-                AdjacencyMatrix(graph);
+                PrintAdjacencyMatrix(graph);
                 cout << endl;
                 break;
             case 3:
@@ -83,6 +90,13 @@ void GraphConstructor(Graph<T>* graph) {
                     cout << graph->TopologicalSort()->Get(i) << " ";
                 cout << endl;
                 break;
+            case 5:
+                //graph->BubbleSort();
+                PrintAdjacencyMatrix(graph->UndirGraphColoring());
+                //cout<<"degree: ";
+                //PrintSequence(graph->UndirGraphColoring());
+                //cout<<"degree: ";
+                //cout << graph->getDegreeOfVertex(0);
             default:
                 return;
         }

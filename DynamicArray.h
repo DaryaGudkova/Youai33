@@ -53,7 +53,6 @@ public:
 
     void Set(const T& value, int index) {
         if (index < 0 || index > this->size) throw std::out_of_range(INDEX_OUT_OF_RANGE_MESSAGE);
-
         this->data[index] = value;
     }
 

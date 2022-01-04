@@ -36,7 +36,7 @@ void PrintDijkstra(Graph<T>* graph, int ver1, int ver2) {
 }
 
 template <typename T>
-void AdjacencyMatrix(Graph<T>* graph) {
+void PrintAdjacencyMatrix(Graph<T>* graph) {
     for (int i = 0; i < graph->getSize(); i++) {
         for (int j = 0; j < graph->getSize(); j++) {
             cout << graph->getWeightOfEdge(i, j) << "   ";
