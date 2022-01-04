@@ -91,8 +91,9 @@ void GraphConstructor(Graph<T>* graph) {
                 cout << endl;
                 break;
             case 5:
-                //graph->BubbleSort();
-                PrintAdjacencyMatrix(graph->UndirGraphColoring());
+                graph->UndirGraphColoring()->print();
+                                //graph->BubbleSort();
+                //PrintAdjacencyMatrix(graph->UndirGraphColoring());
                 //cout<<"degree: ";
                 //PrintSequence(graph->UndirGraphColoring());
                 //cout<<"degree: ";

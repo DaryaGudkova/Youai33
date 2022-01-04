@@ -354,32 +354,51 @@ public:
         return graph;
     }
 
-    template<class TKey, class TElement>
-    Dictionary<TKey, TElement>* UndirGraphColoring(){
-        int k = 1;
-        auto* graphColored = new Graph<T>(*this);
+    //template< class TKey, class TElement>
+    Dictionary<int, int>* UndirGraphColoring(){
+        auto* orderedGraph = new Graph<T>(*this);
         //упорядочиваем вершины по убыванию степени
-        for (int i = 0; i < graphColored->getSize(); i++) {
-            for (int j = 0; j < graphColored->getSize() - i - 1; j++) {
-                if (graphColored->getDegreeOfVertex(j) < graphColored->getDegreeOfVertex(j+1)) {
-                    graphColored->SwapVertex(*graphColored->getVertex(j), *graphColored->getVertex(j+1));
+        for (int i = 0; i < orderedGraph->getSize(); i++) {
+            for (int j = 0; j < orderedGraph->getSize() - i - 1; j++) {
+                if (orderedGraph->getDegreeOfVertex(j) < orderedGraph->getDegreeOfVertex(j + 1)) {
+                    orderedGraph->SwapVertex(*orderedGraph->getVertex(j), *orderedGraph->getVertex(j + 1));
                 }
             }
         }
-
+        PrintAdjacencyMatrix(orderedGraph);
+        auto* coloredGraph = new Dictionary<int, int>(); //вершина-цвет
+        for(int i = 0; i < orderedGraph->getSize(); i++){
+            coloredGraph->add(i, 0);
+        }
+        coloredGraph->print();
+        int k = 1;
+        coloredGraph->changeElem(0, k);
+        //int i = 0;
+        //while(coloredGraph->containsElem(0)){
+        for(int i = 0; i<orderedGraph->getSize(); i++){
+            for(int j = 0; j < orderedGraph->getSize(); j++){
+                cout<<"_";
+                cout<<orderedGraph->getWeightOfEdge(i,j);
+                if(orderedGraph->getWeightOfEdge(i,j)==0 && coloredGraph->get(j) == 0 && coloredGraph->get(i) == k /*!orderedGraph->existOfEdge(i,j) && coloredGraph->getKeyByElem(i)==coloredGraph->getKeyByElem(i)*/){
+                    coloredGraph->changeElem(j, k);
+                }
+            }
+            //i++;
+            k++;
+        }
         //Matrix<T> adjMatrix = this->AdjacencyMatrix();
-        //Graph<T>* graphColored = this->BubbleSort();
-        //graphColored->BubbleSort();
+        //Graph<T>* orderedGraph = this->BubbleSort();
+        //orderedGraph->BubbleSort();
         //LinkedList<Vertex*>* orderedVertices = vertices;
         /*for(int i = 1; i < this->getSize(); i++){
-            if(graphColored->getDegreeOfVertex(i-1) > graphColored->getDegreeOfVertex(i)){
-                graphColored->SwapVertex(*graphColored->getVertex(i-1), *graphColored->getVertex(i));
-                //graphColored->swapVertex(*graphColored->getVertex(i-1), *graphColored->getVertex(i));
-                Vertex* temp = graphColored->getVertex(i-1);
-                *graphColored->getVertex(i-1) = *graphColored->getVertex(i);
-                graphColored->getVertex(i) = temp;
+            if(orderedGraph->getDegreeOfVertex(i-1) > orderedGraph->getDegreeOfVertex(i)){
+                orderedGraph->SwapVertex(*orderedGraph->getVertex(i-1), *orderedGraph->getVertex(i));
+                //orderedGraph->swapVertex(*orderedGraph->getVertex(i-1), *orderedGraph->getVertex(i));
+                Vertex* temp = orderedGraph->getVertex(i-1);
+                *orderedGraph->getVertex(i-1) = *orderedGraph->getVertex(i);
+                orderedGraph->getVertex(i) = temp;
                 cout<<"----"<<endl;
-                PrintAdjacencyMatrix(graphColored);
+                PrintAdjacencyMatrix(orderedGraph);
                 cout<<endl;
                 Vertex* temp = orderedVertices->Get(i-1);
                 *orderedVertices->Get(i-1) = *orderedVertices->Get(i);
@@ -387,7 +406,7 @@ public:
                 //orderedVertices->Swapper(orderedVertices->Get(i-1), orderedVertices->Get(i));
             }
         }*/
-        return graphColored;
+        return coloredGraph;
 /*
         //Sequence<int>* V = new ArraySequence<int>(); //множество вершин
         auto* ColoredInK = new Dictionary<int, int>();//множество вершин окрашенных в цвет к
