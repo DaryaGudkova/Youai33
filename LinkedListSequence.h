@@ -48,55 +48,59 @@ public:
         this->size = size;
     }*/
 
-    virtual ~ListSequence() {
+    ~ListSequence() {
         //delete this->list;
         //this->size = 0;
         //std:cout << "klassssss";
     }
 
 
-    virtual T GetFirst() const override {
+    T GetFirst() const override {
         return this->list->GetFirst();
     }
 
-    virtual T GetLast() const override {
+    T GetLast() const override {
         return this->list->GetLast();
     }
 
-    virtual T Get(int index) const override {
+    T Get(int index) const override {
         return this->list->Get(index);
     }
 
 
-    virtual ListSequence<T>* GetSubsequence(int start, int end) const override {
+    ListSequence<T>* GetSubsequence(int start, int end) const override {
         LinkedList<T>* subList = this->list->GetSublist(start, end);
         ListSequence<T>* seq = new ListSequence<T>(subList);
         return seq;
     }
 
-    virtual void Set(const T& data, int index) override {
+    void Set(const T& data, int index) override {
         this->list->Set(data, index);
     }
 
-    virtual void Append(const T& item) override {
+    void Append(const T& item) override {
         this->list->Append(item);
         this->size++;
     }
 
-    virtual void Prepend(const T& item) override {
+    void Prepend(const T& item) override {
         this->list->Prepend(item);
         this->size++;
     }
 
-    virtual void Insert(const T& item, int index) override {
+    void Insert(const T& item, int index) override {
         this->list->Insert(item, index);
         this->size++;
     }
-
+    void Swap(T& i, T& j){
+        T tmp = i;
+        i = j;
+        j = tmp;
+    }
     T& operator [] (const int index) const
     {
 
-        if (index < 0 || index >= this->size) throw throw std::out_of_range(INDEX_OUT_OF_RANGE_MESSAGE);
+        if (index < 0 || index >= this->size) throw std::out_of_range(INDEX_OUT_OF_RANGE_MESSAGE);
 
         return this->Get(index);
 

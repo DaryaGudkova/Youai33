@@ -21,6 +21,7 @@ public:
     virtual Sequence<T>* GetSubsequence(const int start_index, const int end_index) const = 0;
     virtual void Append(const T &value) = 0;
     virtual void Prepend(const T &value) = 0;
+    //virtual void Swap(const T& i, const T& j) = 0;
     virtual void Set(const T& data, int index) = 0;
     virtual void Insert(const T &value, const int index) {};
     virtual Sequence<T>* Concat(const Sequence<T>& seq) const = 0;
@@ -45,7 +46,7 @@ public:
     T& operator [] (const int index) const
     {
 
-        if (index < 0 || index >= this->size) throw throw std::out_of_range(INDEX_OUT_OF_RANGE_MESSAGE);
+        if (index < 0 || index >= this->size) throw std::out_of_range(INDEX_OUT_OF_RANGE_MESSAGE);
 
         return this->Get(index);
 

@@ -88,7 +88,7 @@ public:
         this->size++;
     }
 
-    virtual void Prepend(const T& item) override {
+    void Prepend(const T& item) override {
         this->array->Resize(this->size + 1);
         T t1 = this->array->Get(0);
         T t2;
@@ -122,6 +122,11 @@ public:
         this->array->Set(item, index);
     }
 
+    void Swap(T& i, T& j){
+        T tmp = i;
+        i = j;
+        j = tmp;
+    }
     T& operator [] (const int index) const
     {
 
