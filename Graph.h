@@ -151,14 +151,28 @@ private:
     int size = 0;
 public:
 
-    Graph& operator=(const Graph<T> &graph)
+    Graph& operator=(const Graph &graph)
     {
-        // Выполняем копирование значений
+        if(this == &graph)
+            return *this;
+        delete[] graph.vertices;
+        this->directed = graph.directed;
+        this->size = graph.size;
+        if(graph.vertices){
+            vertices = new LinkedList<Vertex*>();
+            for (int i = 0; i < graph.size; i++) {
+                vertices->Append(graph.vertices->Get(i));
+            }
+        }
+        else
+            vertices = 0;
+        /*// Выполняем копирование значений
         this->vertices = new LinkedList<Vertex*>(graph.vertices);
         this->directed = graph.directed;
         this->size = graph.size;
         // Возвращаем текущий объект, чтобы иметь возможность связать в цепочку выполнение нескольких операций присваивания
-        return *this;
+        */
+         return *this;
     }
     Graph(int size, bool direct) {
         Vertex* ver;
@@ -171,12 +185,20 @@ public:
         this->size = size;
     }
     explicit Graph(const Graph<int>& graph){
-        Vertex* ver;
+        if(graph.vertices){
+            vertices = new LinkedList<Vertex*>();
+            for (int i = 0; i < graph.size; i++) {
+                vertices->Append(graph.vertices->Get(i));
+            }
+        }
+        else
+            vertices = 0;
+        /*Vertex* ver;
         vertices = new LinkedList<Vertex*>();
         for (int i = 0; i < graph.size; i++) {
             ver = graph.vertices->Get(i);
             vertices->Append(ver);
-        }
+        }*/
         //this->vertices = graph.vertices;
         //auto* tmp = new LinkedList<Vertex*>(graph.vertices);
         //this->vertices = tmp;
