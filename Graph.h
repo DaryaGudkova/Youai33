@@ -43,10 +43,14 @@ private:
             this->weight = weight_;
         }
         T getWeight() {
-            return this->weight;
+            if(this)
+                return this->weight;
+            else return NULL;
         }
         int getVertex1() {
-            return this->vertex1;
+            if (this)
+                return this->vertex1;
+            else return NULL;
         }
         int getVertex2(){
             return this->vertex2;
@@ -66,8 +70,13 @@ private:
             // Возвращаем текущий объект, чтобы иметь возможность связать в цепочку выполнение нескольких операций присваивания
             return *this;
         }
+        ~Edge() {
+            this->vertex2 = 0;
+            this->vertex1 = 0;
+            this->size = 0;
+        }
 
-        ~Edge() = default;
+        //~Edge() = default;
     };
 
     class Vertex {
@@ -80,7 +89,7 @@ private:
         /*Vertex(const Vertex& v) {
             this->edges = new LinkedList<Edge *>(v->edges);
         }*/
-        explicit Vertex(const LinkedList<Edge*>& edges) {
+        Vertex(const LinkedList<Edge*>& edges) {
            this->edges = new LinkedList<Edge*>(edges);
         }
         int getEdgesCount(){
@@ -131,11 +140,28 @@ private:
         }
         Vertex& operator=(const Vertex &v)
         {
-            // Выполняем копирование значений
+            if(this == &v)
+                return *this;
+            /*if(v.edges->GetSize()>0){
+                delete[] v.edges;
+            }*/
+
+            if(v.edges){
+                //delete[] v.edges;
+                edges = new LinkedList<Edge*>(v.edges->GetSize());
+                for (int i = 0; i < v.edges->GetSize(); i++) {
+                    edges->Append(v.edges->Get(i));
+                }
+            }
+            else
+                edges = NULL;
+            /*// Выполняем копирование значений
+
             this->edges = v.edges;
-            // Возвращаем текущий объект, чтобы иметь возможность связать в цепочку выполнение нескольких операций присваивания
+            // Возвращаем текущий объект, чтобы иметь возможность связать в цепочку выполнение нескольких операций присваивания*/
             return *this;
         }
+        ~Vertex() = default;
     };
 
     void TopologicalSortHelper(int ver, bool *visited, ArraySequence<int> *seq){
@@ -165,7 +191,7 @@ public:
             }
         }
         else
-            vertices = 0;
+            vertices = NULL;
         /*// Выполняем копирование значений
         this->vertices = new LinkedList<Vertex*>(graph.vertices);
         this->directed = graph.directed;
@@ -174,25 +200,30 @@ public:
         */
          return *this;
     }
+    Graph(){
+        this->vertices = new LinkedList<Vertex*>;
+        this->size = 0;
+        this->directed = true;
+    }
     Graph(int size, bool direct) {
         Vertex* ver;
-        vertices = new LinkedList<Vertex*>();
+        this->vertices = new LinkedList<Vertex*>();
         for (int i = 0; i < size; i++) {
             ver = new Vertex();
-            vertices->Append(ver);
+            this->vertices->Append(ver);
         }
         this->directed = direct;
         this->size = size;
     }
     explicit Graph(const Graph<int>& graph){
         if(graph.vertices){
-            vertices = new LinkedList<Vertex*>();
+            this->vertices = new LinkedList<Vertex*>();
             for (int i = 0; i < graph.size; i++) {
-                vertices->Append(graph.vertices->Get(i));
+                this->vertices->Append(new Vertex(*graph.vertices->Get(i)));
             }
         }
         else
-            vertices = 0;
+            this->vertices = 0;
         /*Vertex* ver;
         vertices = new LinkedList<Vertex*>();
         for (int i = 0; i < graph.size; i++) {
@@ -233,7 +264,7 @@ public:
     }
     bool existOfEdge (int ver1, int ver2) {
         for (int i = 0; i < this->getSize(); i++) {
-            if (this->getWeightOfEdge(ver1,ver2) != 0)
+            if (this->getWeightOfEdge(ver1,ver2) != NULL)
                 return true;
         }
         return false;
@@ -525,6 +556,7 @@ public:
                     int tmp = numberOrderedVertices[j];
                     numberOrderedVertices[j] = numberOrderedVertices[j + 1];
                     numberOrderedVertices[j + 1] = tmp;
+                    //swap(*orderedGraph->getVertex(j), *orderedGraph->getVertex(j + 1));
                     orderedGraph->SwapVertex(*orderedGraph->getVertex(j), *orderedGraph->getVertex(j + 1));
                 }
             }

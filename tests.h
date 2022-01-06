@@ -75,8 +75,11 @@ void testLinkedList() {
 
     LinkedList<int> list1(initArr1, 4);
 
+    //list1.~LinkedList<int>();
+    //assert(LinkedList<int>() != list1.~LinkedList<int>());
+    //assert( == list1.~LinkedList<int>());
     assert(list1 == LinkedList<int>(list1));
-    assert(LinkedList<int>() == LinkedList<int>((int*)0, 0));
+    assert(LinkedList<int>() == LinkedList<int>(nullptr, 0));
     assert(list1.Get(0) == 1);
     assert(list1.GetFirst() == 1);
     assert(list1.Get(2) == 3);

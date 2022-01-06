@@ -195,8 +195,6 @@ template<typename T> LinkedList<T> *LinkedList<T>::Concat(LinkedList<T> *list) {
     temp->pnext =list->head;
     return result;
 }*/
-
-
 #pragma once
 #include <stdexcept>
 
@@ -207,104 +205,98 @@ template<typename T> LinkedList<T> *LinkedList<T>::Concat(LinkedList<T> *list) {
 template <class T>
 class LinkedList
 {
-
 private:
-
-    struct Record
-    {
+    /*class Node{
+    public:
+        T data;
+        Node* next;
+        Node(T data = T(), Node next = nullptr){
+            this->data = data;
+            this->next = next;
+        }
+    };
+    Node* head = nullptr;
+    int size = 0;*/
+    struct Node{
         T data = T();
-        Record* next = nullptr;
+        Node* next = nullptr;
     };
 
     int size = 0;
-    Record* head = nullptr;
+    Node* head = nullptr;
 
 public:
-
-
     LinkedList() : size(0), head(nullptr) {};
 
     LinkedList(int size) : LinkedList() {
         if (size < 0) throw std::length_error(NEGATIVE_SIZE_MESSAGE);
-
-        Record** tmp = &(this->head);
+        Node** tmp = &(this->head);
         for (int i = 0; i < size; i++) {
-            *tmp = new Record;
+            *tmp = new Node;
             (*tmp)->data = T();
             tmp = &((*tmp)->next);
         }
         this->size = size;
     }
 
-    LinkedList(const T* data, const int size) : LinkedList()
-    {
-
+    LinkedList(const T* data, const int size) : LinkedList(){
         if (size < 0) throw std::out_of_range(NEGATIVE_SIZE_MESSAGE);
-
         this->size = size;
-        Record** newptr = &(this->head);
-        for (int i = 0; i < size; ++i)
-        {
-            (*newptr) = new Record;
+        Node** newptr = &(this->head);
+        for (int i = 0; i < size; ++i){
+            (*newptr) = new Node;
             (*newptr)->data = data[i];
             newptr = &((*newptr)->next);
         }
-
     }
 
     LinkedList(const LinkedList<T>& list) {
         //if (list.head == nullptr) return;
-        Record* ptr = list.head;
-        Record** newptr = &(this->head);
-
+        Node* ptr = list.head;
+        Node** newptr = &(this->head);
         for (int i = 0; i < list.size; i++, ptr = ptr->next) {
-            *newptr = new Record;
+            *newptr = new Node;
             (*newptr)->data = ptr->data;
             newptr = &((*newptr)->next);
-
         }
         this->size = list.size;
     }
 
+    //~LinkedList() = default;
     ~LinkedList() {
-        Record* ptr = this->head;
-        Record* next;
-        if (this->size == 1)
-            delete ptr;
-        else {
-            while (ptr != nullptr) {
-                next = ptr->next;
+        if(this) {
+            Node *ptr = head;
+            Node *next;
+            if (this->size == 1)
                 delete ptr;
-                ptr = next;
+            else {
+                while (ptr != nullptr) {
+                    next = ptr->next;
+                    delete ptr;
+                    ptr = next;
+                }
             }
+            this->size = 0;
         }
-        this->size = 0;
     }
 
     //Methods of class
-    T GetFirst() const
-    {
-
+    T GetFirst() const{
         if (this->size == 0) throw std::length_error(ZERO_SIZE_MESSAGE);
         return this->head->data;
-
     }
 
-    T GetLast() const
-    {
-
+    T GetLast() const{
         if (this->size == 0) throw std::length_error(ZERO_SIZE_MESSAGE);
-        Record* ptr = this->head;
+        Node* ptr = this->head;
         while (ptr->next != nullptr) ptr = ptr->next;
-
         return ptr->data;
-
     }
 
     T Get(const int index) const
     {
         if (index < 0 || index >= this->size) throw std::out_of_range(INDEX_OUT_OF_RANGE_MESSAGE);
-        Record* ptr = this->head;
+        Node* ptr = this->head;
         for (int i = 0; i < index; i++) ptr = ptr->next;
 
         return ptr->data;
@@ -318,7 +310,7 @@ public:
         if (start_index > end_index) throw std::logic_error("end must be not less than start");
 
         int newsize = end_index - start_index;
-        Record* ptr = this->head;
+        Node* ptr = this->head;
         T* newdata = new T[newsize];
 
         for (int i = 0; i < end_index; ++i)
@@ -341,10 +333,10 @@ public:
 
     void Append(const T &data)
     {
-        Record** ptr = &(this->head);
+        Node** ptr = &(this->head);
         while (*ptr != nullptr) ptr = &((*ptr)->next);
 
-        (*ptr) = new Record;
+        (*ptr) = new Node;
         (*ptr)->data = data;
 
         this->size++;
@@ -353,7 +345,7 @@ public:
 
     void Prepend(const T &data)
     {
-        Record* ptr = new Record{ data, this->head };
+        Node* ptr = new Node{data, this->head };
         this->head = ptr;
 
         this->size++;
@@ -364,7 +356,7 @@ public:
         if (index < 0 || index >= this->size) throw std::out_of_range(INDEX_OUT_OF_RANGE_MESSAGE);
 
 
-        Record* ptr;
+        Node* ptr;
         {
             int i = 0;
             for (i = 0, ptr = this->head; i < index; i++, ptr = ptr->next);
@@ -382,8 +374,8 @@ public:
         }
         else
         {
-            Record* ptr = new Record{ data, this->head };
-            Record* newptr = new Record{ data, this->head };
+            Node* ptr = new Node{data, this->head };
+            Node* newptr = new Node{data, this->head };
             for (int i = 0; i < index ; i++)
                 ptr = ptr->next;
             newptr->next = ptr->next;
@@ -396,13 +388,13 @@ public:
         if (index < 0 || index >= this->size) throw std::out_of_range(INDEX_OUT_OF_RANGE_MESSAGE);
 
 
-        Record preHead;
+        Node preHead;
         preHead.next = this->head;
-        Record* ptr;
+        Node* ptr;
         ptr = &preHead;
         for (int i = 0; i < index; i++)
             ptr = ptr->next;
-        Record* tmp = ptr->next;
+        Node* tmp = ptr->next;
         ptr->next = ptr->next->next;
         delete tmp;
 
@@ -413,13 +405,13 @@ public:
 
     LinkedList<T>* Concat(const LinkedList<T> &list)
     {
-        Record* ptr1 = this->head;
-        Record* ptr2 = list.head;
+        Node* ptr1 = this->head;
+        Node* ptr2 = list.head;
 
         LinkedList<T>* newList = new LinkedList<T>();
-        Record** ptr = &(newList->head);
+        Node** ptr = &(newList->head);
         while (ptr1 != nullptr) {
-            *ptr = new Record{
+            *ptr = new Node{
                     ptr1->data,
                     ptr1->next
             };
@@ -428,7 +420,7 @@ public:
             ptr = &((*ptr)->next);
         }
         while (ptr2 != nullptr) {
-            *ptr = new Record{ptr2->data,ptr2->next};
+            *ptr = new Node{ptr2->data, ptr2->next};
             ptr2 = ptr2->next;
             ptr = &((*ptr)->next);
         }
@@ -443,7 +435,7 @@ public:
 
         if (this->head == nullptr || index < 0 || index >= this->size) throw std::out_of_range(INDEX_OUT_OF_RANGE_MESSAGE);
 
-        Record* ptr = this->head;
+        Node* ptr = this->head;
 
         for (int i = 0; i < index; ++i) ptr = ptr->next;
 
