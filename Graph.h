@@ -384,154 +384,6 @@ public:
                 this->TopologicalSortHelper(i, visited, seq);
         return seq;
     }
-    Matrix<int>* AdjacencyMatrix(){
-        auto* matrix = new Matrix<int>();
-        for (int i = 0; i < this->getSize(); i++) {
-            for (int j = 0; j < this->getSize(); j++) {
-                matrix->Set(this->getWeightOfEdge(i, j), i, j);
-            }
-        }
-        return matrix;
-    }
-
-    void PrintAdjacencyMatrix(Graph<T>* graph) {
-        cout << "  0   1   2   3   4   5   6   7   8   9"<<endl;
-        for (int i = 0; i < graph->getSize(); i++) {
-            cout << i << " ";
-            for (int j = 0; j < graph->getSize(); j++) {
-                cout << graph->getWeightOfEdge(i, j) << "   ";
-            }
-            cout << endl;
-        }
-    }
-
-    //template< class TKey, class TElement>
-    /*Dictionary<int, int>* UndirGraphColoring(){
-        //auto* forOrderedGraph = new Graph<T>(*this);
-        //упорядочиваем вершины по убыванию степени
-        auto* forOrderedGraph = new Dictionary<int, int>(); //вершина-степень
-        for(int i = 0; i < this->getSize(); i++){
-            forOrderedGraph->add(i, this->getDegreeOfVertex(i));
-        }
-        forOrderedGraph->print();
-        //auto* orderedGraph = new DynamicArray<int>(forOrderedGraph->getCount());
-        cout<<"1";
-        vector<int> orderedGraph;
-        cout<<"2";
-        for(int i = 0; i< forOrderedGraph->getCount();i++){
-            cout<<"3";
-            orderedGraph.push_back(i);
-        }
-        for (int i = 0; i < this->getSize(); i++) {
-            for (int j = 0; j < this->getSize() - i - 1; j++) {
-                if (forOrderedGraph->get(j) < forOrderedGraph->get(j + 1)) {
-                    //orderedGraph->Swap(orderedGraph->Get(j), orderedGraph->Get(j+1));
-                    int tmp = orderedGraph[j];
-                    orderedGraph[j] = orderedGraph[j+1];
-                    orderedGraph[j+1] = tmp;
-                    //forOrderedGraph->SwapVertex(*forOrderedGraph->getVertex(j), *forOrderedGraph->getVertex(j + 1));
-                }
-            }
-        }
-        cout<<"---------------------------";
-        for(int i =0;i<forOrderedGraph->getCount();i++){
-            cout<<orderedGraph[i]<<" ";
-        }
-        cout<<"---------------------------";
-        *for (int i = 0; i < this->getSize(); i++) {
-            for (int j = 0; j < this->getSize() - i - 1; j++) {
-                if (this->getDegreeOfVertex(j) < this->getDegreeOfVertex(j + 1)) {
-                    coloredGraph->changeElem(j,)
-                    //forOrderedGraph->SwapVertex(*forOrderedGraph->getVertex(j), *forOrderedGraph->getVertex(j + 1));
-                }
-            }
-        }*
-        *for (int i = 0; i < forOrderedGraph->getSize(); i++) {
-            for (int j = 0; j < forOrderedGraph->getSize() - i - 1; j++) {
-                if (forOrderedGraph->getDegreeOfVertex(j) < forOrderedGraph->getDegreeOfVertex(j + 1)) {
-                    forOrderedGraph->SwapVertex(*forOrderedGraph->getVertex(j), *forOrderedGraph->getVertex(j + 1));
-                }
-            }
-        }*
-        auto* coloredGraph = new Dictionary<int, int>(); //вершина-цвет
-        for(int i = 0; i < this->getSize(); i++){
-            coloredGraph->add(i, 0);
-        }
-        coloredGraph->print();
-        int k = 1;
-
-        int max = -1;
-        int maxkey = -1;
-        for (int i = 0; i < forOrderedGraph->getCount(); i++){
-            if(forOrderedGraph->get(i) > max){
-                max = forOrderedGraph->get(i);
-                maxkey = i;
-            }
-        }
-        int t = maxkey;
-        while(max >= 0){
-        //for(int i = 0; i< this->getSize(); i++){
-            if(forOrderedGraph->containsElem(max)){
-                for(t=0;t)
-                t = forOrderedGraph->getKeyByElem(max);
-                cout << "t="<<t;
-            //if(forOrderedGraph->get(t) == max){
-                if(coloredGraph->get(t) == 0) {
-                    coloredGraph->changeElem(t, k);
-                    for (int j = 0; j < this->getSize(); j++) {
-                        cout << "_";
-                        cout << this->getWeightOfEdge(t, j);
-                        if (this->getWeightOfEdge(t, j) == 0 && coloredGraph->get(j) == 0) {
-                            coloredGraph->changeElem(j, k);
-                        }
-                    }
-                    //i++;
-                    k++;
-                }
-                forOrderedGraph->changeElem(t, -1);
-            }
-            else{
-                max--;
-            }
-        }
-        //Matrix<T> adjMatrix = this->AdjacencyMatrix();
-        //Graph<T>* forOrderedGraph = this->BubbleSort();
-        //forOrderedGraph->BubbleSort();
-        //LinkedList<Vertex*>* orderedVertices = vertices;
-        *for(int i = 1; i < this->getSize(); i++){
-            if(forOrderedGraph->getDegreeOfVertex(i-1) > forOrderedGraph->getDegreeOfVertex(i)){
-                forOrderedGraph->SwapVertex(*forOrderedGraph->getVertex(i-1), *forOrderedGraph->getVertex(i));
-                //forOrderedGraph->swapVertex(*forOrderedGraph->getVertex(i-1), *forOrderedGraph->getVertex(i));
-                Vertex* temp = forOrderedGraph->getVertex(i-1);
-                *forOrderedGraph->getVertex(i-1) = *forOrderedGraph->getVertex(i);
-                forOrderedGraph->getVertex(i) = temp;
-                cout<<"----"<<endl;
-                PrintAdjacencyMatrix(forOrderedGraph);
-                cout<<endl;
-                Vertex* temp = orderedVertices->Get(i-1);
-                *orderedVertices->Get(i-1) = *orderedVertices->Get(i);
-                *orderedVertices->Get(i) = *temp;
-                //orderedVertices->Swapper(orderedVertices->Get(i-1), orderedVertices->Get(i));
-            }
-        }*
-        return coloredGraph;
-/*
-        //Sequence<int>* V = new ArraySequence<int>(); //множество вершин
-        auto* ColoredInK = new Dictionary<int, int>();//множество вершин окрашенных в цвет к
-        for (int i = 0; i < this->getSize(); i++){
-            if (existOfVertex(i))
-                continue;
-            ColoredInK->changeElem(k,i); //красим в цвет k вершину i
-            S->Append(i);//добавляем цвет
-            this->getVertex(i) = this->getVertex(i) // исключаем итую вершину
-*
-    }*/
-
-
-
-    bool Not_adjacent_to_others_of_the_same_color(){
-
-    }
     /*
      * Описание алгоритма
     1. Упорядочить вершины по невозрастанию степени.
@@ -542,9 +394,7 @@ public:
             с другой, уже окрашенной в этот цвет.
         4.2. Выбрать следущий цвет.*/
     Dictionary<int, int>* GraphColoring(){
-        ///тут должны копироваться значения, но почему-то видимо копируются ссылки
         auto* orderedGraph = new Graph<int>(*this); //граф с упорядоченными вершинами
-        //PrintAdjacencyMatrix(orderedGraph);
         vector<int> numberOrderedVertices; //массив вершин упорядоченных по степени, т.е. по количеству выходящих из них рёбер
         for(int i = 0; i<orderedGraph->getSize();i++){
             numberOrderedVertices.push_back(i);
@@ -556,102 +406,36 @@ public:
                     int tmp = numberOrderedVertices[j];
                     numberOrderedVertices[j] = numberOrderedVertices[j + 1];
                     numberOrderedVertices[j + 1] = tmp;
-                    //swap(*orderedGraph->getVertex(j), *orderedGraph->getVertex(j + 1));
                     orderedGraph->SwapVertex(*orderedGraph->getVertex(j), *orderedGraph->getVertex(j + 1));
                 }
-                for(int p = 0; p<orderedGraph->getSize();p++){
-                    cout<<numberOrderedVertices[p]<<" ";
-                }
-                cout<<endl;
-                PrintAdjacencyMatrix(orderedGraph);
-                cout << endl;
             }
         }
-        cout<<endl;
-        cout << "end for" << endl;
-        PrintAdjacencyMatrix(orderedGraph);
-        cout<<endl;
-        PrintAdjacencyMatrix(this);
-
-        for(int i = 0; i<orderedGraph->getSize();i++){
-            cout<<numberOrderedVertices[i]<<" ";
-        }
-        cout<<endl;
         auto* coloredGraph = new Dictionary<int, int>(); //вершина-цвет
         for(int i = 0; i < this->getSize(); i++){
             coloredGraph->add(i, 0);
         }
         int k = 1;
         int t;
-        cout<<"COLORING";
         for(int i = 0; i < this->getSize(); i++){
             t = numberOrderedVertices[i];
-            cout << "t = " << t << endl;
             if(coloredGraph->get(t) == 0) {
                 coloredGraph->changeElem(t, k);
-                coloredGraph->print();
-                cout<<endl;
                 for (int j = 0; j < this->getSize(); j++) {
-                    //cout << "_";
-                    //cout << this->getWeightOfEdge(t, j);
-                    if (this->getWeightOfEdge(t, j) == 0 && coloredGraph->get(j) == 0) { //не смежна со всеми покрашенными в цвет t
+                    //не смежна со всеми покрашенными в цвет t
+                    if (this->getWeightOfEdge(t, j) == 0 && coloredGraph->get(j) == 0) {
                         coloredGraph->changeElem(j, k);
                         //если раскрашена вершина, которая смежна с какой-либо другой вершиной этого же цвета, то убираем её раскраску
                         for(int l = 0; l < coloredGraph->getCount(); l++){
                             if(coloredGraph->get(l) == k && this->getWeightOfEdge(j, l)!=0){
                                 coloredGraph->changeElem(j, 0);
-                                cout << "j = " <<j << " l = " << l <<endl;
                             }
                         }
                     }
-                    coloredGraph->print();
-                    cout<<endl;
                 }
                 k++;
             }
         }
         return coloredGraph;
-        /*
-        PrintAdjacencyMatrix(orderedGraph);
-        for (int i = 0; i < this->getSize(); i++) {
-            for (int j = 0; j < this->getSize() - i - 1; j++) {
-                if (orderedGraph->get(j) < orderedGraph->get(j + 1)) {
-                    //orderedGraph->Swap(orderedGraph->Get(j), orderedGraph->Get(j+1));
-                    int tmp = orderedGraph[j];
-                    orderedGraph[j] = orderedGraph[j+1];
-                    orderedGraph[j+1] = tmp;
-                    //forOrderedGraph->SwapVertex(*forOrderedGraph->getVertex(j), *forOrderedGraph->getVertex(j + 1));
-                }
-            }
-        }
-        cout<<"---------------------------";
-        for(int i =0;i<forOrderedGraph->getCount();i++){
-            cout<<orderedGraph[i]<<" ";
-        }
-        cout<<"---------------------------";
-        auto* coloredGraph = new Dictionary<int, int>(); //вершина-цвет
-        for(int i = 0; i < orderedGraph->getSize(); i++){
-            coloredGraph->add(i, 0);
-        }
-        coloredGraph->print();
-        int k = 1;
-        coloredGraph->changeElem(0, k);
-        //int i = 0;
-        //while(coloredGraph->containsElem(0)){
-        for(int i = 0; i<orderedGraph->getSize(); i++){
-            for(int j = 0; j < orderedGraph->getSize(); j++){
-                cout<<"_";
-                cout<<orderedGraph->getWeightOfEdge(i,j);
-                if(orderedGraph->getWeightOfEdge(i,j)==0 && coloredGraph->get(j) == 0 && coloredGraph->get(i) == k){
-                    coloredGraph->changeElem(j, k);
-                }
-            }
-            k++;
-        }
-        */
-
     }
-
-
 };
 #endif //LAB3SEM3_GRAPH_H

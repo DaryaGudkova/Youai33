@@ -3,14 +3,7 @@
 #include "GraphPrinter.h"
 
 using namespace std;
-template <typename T>
-void PrintSequence(LinkedList<T*>* seq) {
-    for (int i=0; i<seq->GetSize(); i++) {
-        cout << seq->Get(i);
-        cout << " ";
-    }
-    cout<<endl;
-}
+
 Graph<int>* DirectedGraph()
 {
     Graph<int>* gr = new Graph<int>(7, true);
@@ -40,8 +33,6 @@ Graph<int>* UndirectedGraph()
     return gr;
 }
 
-//void PrintMenu();
-
 template <typename T>
 void GraphConstructor(Graph<T>* graph) {
     int choose = 0;
@@ -54,10 +45,14 @@ void GraphConstructor(Graph<T>* graph) {
         cout << "1 - Change an edge" << endl;
         cout << "2 - Print adjacency matrix" << endl;
         cout << "3 - Find shortest path from ver1 to ver2" << endl;
-        cout << "4 - Topological sort" << endl;
+        cout << "4 - Coloring" << endl;
+        if(graph->isDirected())
+            cout << "5 - Topological sort" << endl;
         cin >> choose;
         switch (choose)
         {
+            case 0:
+                InterfaceGraph();
             case 1:
                 cout << endl;
                 cout << "Enter the first vertex: ";
@@ -85,19 +80,17 @@ void GraphConstructor(Graph<T>* graph) {
                 cout << endl;
                 break;
             case 4:
-                cout << "Your topological sort: " << endl;
-                for (int i = 0; i < graph->TopologicalSort()->GetSize(); i++)
-                    cout << graph->TopologicalSort()->Get(i) << " ";
-                cout << endl;
+                cout << "Coloring your graph: " << endl;
+                graph->GraphColoring()->print();
                 break;
             case 5:
-                graph->GraphColoring()->print();
-                //graph->BubbleSort();
-                //PrintAdjacencyMatrix(graph->GraphColoring());
-                //cout<<"degree: ";
-                //PrintSequence(graph->UndirGraphColoring());
-                //cout<<"degree: ";
-                //cout << graph->getDegreeOfVertex(0);
+                if(graph->isDirected()){
+                    cout << "Your topological sort: " << endl;
+                    for (int i = 0; i < graph->TopologicalSort()->GetSize(); i++)
+                        cout << graph->TopologicalSort()->Get(i) << " ";
+                    cout << endl;
+                }
+                break;
             default:
                 return;
         }
@@ -121,6 +114,8 @@ void InterfaceGraph(){
     cin >> choose;
     cout << endl;
     switch (choose){
+        case 0:
+            break;
         case 1:
             gr = DirectedGraph();
             GraphConstructor(gr);
@@ -136,7 +131,7 @@ void InterfaceGraph(){
             cout << "0 - Undirected graph" << endl;
             cout << "1 - Directed graph" << endl;
             cin >> choose;
-            switch (choose){
+            switch (choose) {
                 case 0:
                     gr = new Graph<int>(number, false);
                     GraphConstructor(gr);
@@ -148,6 +143,9 @@ void InterfaceGraph(){
                 default:
                     return;
             }
+            break;
+        default:
+            return;
     }
 }
 
