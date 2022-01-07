@@ -53,7 +53,9 @@ private:
             else return NULL;
         }
         int getVertex2(){
-            return this->vertex2;
+            if (this)
+                return this->vertex2;
+            else return NULL;
         }
         bool operator==(Edge& other) {
             return (this->weight == other.weight) && (this->vertex1 == other.vertex1) && (this->vertex2 == other.vertex2);
@@ -393,23 +395,14 @@ public:
     }
 
     void PrintAdjacencyMatrix(Graph<T>* graph) {
+        cout << "  0   1   2   3   4   5   6   7   8   9"<<endl;
         for (int i = 0; i < graph->getSize(); i++) {
+            cout << i << " ";
             for (int j = 0; j < graph->getSize(); j++) {
                 cout << graph->getWeightOfEdge(i, j) << "   ";
             }
             cout << endl;
         }
-    }
-    Graph<T>* BubbleSort() { //O(n^2)
-        Graph<T>* graph = this;
-        for (int i = 0; i < graph->getSize(); i++) {
-            for (int j = 0; j < graph->getSize() - i - 1; j++) {
-                if (graph->getDegreeOfVertex(i-1) > graph->getDegreeOfVertex(i)) {
-                    graph->SwapVertex(*graph->getVertex(i-1), *graph->getVertex(i));
-                }
-            }
-        }
-        return graph;
     }
 
     //template< class TKey, class TElement>
@@ -533,6 +526,12 @@ public:
             this->getVertex(i) = this->getVertex(i) // исключаем итую вершину
 *
     }*/
+
+
+
+    bool Not_adjacent_to_others_of_the_same_color(){
+
+    }
     /*
      * Описание алгоритма
     1. Упорядочить вершины по невозрастанию степени.
@@ -545,6 +544,7 @@ public:
     Dictionary<int, int>* GraphColoring(){
         ///тут должны копироваться значения, но почему-то видимо копируются ссылки
         auto* orderedGraph = new Graph<int>(*this); //граф с упорядоченными вершинами
+        //PrintAdjacencyMatrix(orderedGraph);
         vector<int> numberOrderedVertices; //массив вершин упорядоченных по степени, т.е. по количеству выходящих из них рёбер
         for(int i = 0; i<orderedGraph->getSize();i++){
             numberOrderedVertices.push_back(i);
@@ -559,30 +559,53 @@ public:
                     //swap(*orderedGraph->getVertex(j), *orderedGraph->getVertex(j + 1));
                     orderedGraph->SwapVertex(*orderedGraph->getVertex(j), *orderedGraph->getVertex(j + 1));
                 }
+                for(int p = 0; p<orderedGraph->getSize();p++){
+                    cout<<numberOrderedVertices[p]<<" ";
+                }
+                cout<<endl;
+                PrintAdjacencyMatrix(orderedGraph);
+                cout << endl;
             }
         }
-        ///если попробовать вывести матрицу смежности для изначального графа и для графа с
-        ///упорядоченными вершинами, то они будут одинаковыми:(
+        cout<<endl;
+        cout << "end for" << endl;
         PrintAdjacencyMatrix(orderedGraph);
         cout<<endl;
         PrintAdjacencyMatrix(this);
 
+        for(int i = 0; i<orderedGraph->getSize();i++){
+            cout<<numberOrderedVertices[i]<<" ";
+        }
+        cout<<endl;
         auto* coloredGraph = new Dictionary<int, int>(); //вершина-цвет
         for(int i = 0; i < this->getSize(); i++){
             coloredGraph->add(i, 0);
         }
         int k = 1;
         int t;
+        cout<<"COLORING";
         for(int i = 0; i < this->getSize(); i++){
             t = numberOrderedVertices[i];
+            cout << "t = " << t << endl;
             if(coloredGraph->get(t) == 0) {
                 coloredGraph->changeElem(t, k);
+                coloredGraph->print();
+                cout<<endl;
                 for (int j = 0; j < this->getSize(); j++) {
-                    cout << "_";
-                    cout << this->getWeightOfEdge(t, j);
-                    if (this->getWeightOfEdge(t, j) == 0 && coloredGraph->get(j) == 0) {
+                    //cout << "_";
+                    //cout << this->getWeightOfEdge(t, j);
+                    if (this->getWeightOfEdge(t, j) == 0 && coloredGraph->get(j) == 0) { //не смежна со всеми покрашенными в цвет t
                         coloredGraph->changeElem(j, k);
+                        //если раскрашена вершина, которая смежна с какой-либо другой вершиной этого же цвета, то убираем её раскраску
+                        for(int l = 0; l < coloredGraph->getCount(); l++){
+                            if(coloredGraph->get(l) == k && this->getWeightOfEdge(j, l)!=0){
+                                coloredGraph->changeElem(j, 0);
+                                cout << "j = " <<j << " l = " << l <<endl;
+                            }
+                        }
                     }
+                    coloredGraph->print();
+                    cout<<endl;
                 }
                 k++;
             }

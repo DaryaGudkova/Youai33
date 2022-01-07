@@ -28,7 +28,7 @@ Graph<int>* DirectedGraph()
 Graph<int>* UndirectedGraph()
 {
     Graph<int>* gr = new Graph<int>(10, false);
-    gr->changeEdge(0, 7, 1);
+    gr->changeEdge(8, 7, 1);
     gr->changeEdge(6, 1, 90);
     gr->changeEdge(6, 3, 13);
     gr->changeEdge(6, 7, 2);
