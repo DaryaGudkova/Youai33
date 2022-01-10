@@ -127,7 +127,7 @@ public:
         i = j;
         j = tmp;
     }
-    T& operator [] (const int index) const
+    T& operator[] (const int index) const
     {
 
         if (index < 0 || index >= this->size) throw throw std::out_of_range(INDEX_OUT_OF_RANGE_MESSAGE);

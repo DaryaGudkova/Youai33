@@ -156,4 +156,41 @@ public:
         }
     }
 };
+
+
+
+const int SIZE = (1 << 17);
+int a[100100]; // исходный массив
+int tree[2 * SIZE];
+int n; // кол-во элементов в исходном массиве
+
+void build_sum_tree(int v, int L, int R)
+{
+    if (L == R - 1) // Условие выхода
+    {
+        if (L < n) // Поскольку мы объявляем большую размерность, необходимо следить за границей
+        {
+            tree[v] = a[L];
+        }
+        return; // Присвоили, возвращаемся
+    }
+    int M = (L + R) / 2; // Выбираем середину отрезка [L..R]
+    build_sum_tree(2 * v + 1, L, M); // Запускаем сумму для левого потомка
+    build_sum_tree(2 * v + 2, M, R); // И для правого
+    tree[v] = tree[2 * v + 1] + tree[2 * v + 2]; // Обновляем текущую вершину
+}
+// Usage:
+// build_sum_tree(0, 0, SIZE); Строим дерево от нулевой вершины с границей от 0 до SIZE (можно n)
+int t[];
+void build (int a[], int v, int tl, int tr) {
+    if (tl == tr)
+        t[v] = a[tl];
+    else {
+        int tm = (tl + tr) / 2;
+        build (a, v*2, tl, tm);
+        build (a, v*2+1, tm+1, tr);
+        t[v] = t[v*2] + t[v*2+1];
+    }
+}
+
 #endif //INTERFACE_CPP_SORTS_H

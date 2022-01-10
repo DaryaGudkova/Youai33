@@ -384,8 +384,8 @@ public:
                 this->TopologicalSortHelper(i, visited, seq);
         return seq;
     }
-    /*
-     * Описание алгоритма
+    ////РАСКРАСКА
+    /* Описание алгоритма
     1. Упорядочить вершины по невозрастанию степени.
     2. Окрасить первую вершину в цвет 1.
     3. Выбрать цвет окраски 1.
@@ -395,7 +395,7 @@ public:
         4.2. Выбрать следущий цвет.*/
     Dictionary<int, int>* GraphColoring(){
         auto* orderedGraph = new Graph<int>(*this); //граф с упорядоченными вершинами
-        vector<int> numberOrderedVertices; //массив вершин упорядоченных по степени, т.е. по количеству выходящих из них рёбер
+        vector<int> numberOrderedVertices; //номера вершин упорядоченных по степени, т.е. по количеству выходящих из них рёбер
         for(int i = 0; i<orderedGraph->getSize();i++){
             numberOrderedVertices.push_back(i);
         }
